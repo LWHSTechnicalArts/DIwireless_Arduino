@@ -36,7 +36,7 @@ void loop() {
   int buttonState=digitalRead(7);     //test button state
   if (buttonState==HIGH){
 
-    fona.sendSMS("14155703197", "!!!!The Button is Pressed!!!!!");  //phone number and message here 140 characters max
+    fona.sendSMS("14150000000", "!!!!The Button is Pressed!!!!!");  //phone number and message here 140 characters max
     Serial.println("Sent!");
     delay(5000);
   }
