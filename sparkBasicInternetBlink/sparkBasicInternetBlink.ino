@@ -4,7 +4,7 @@ int led2=D6;
 void setup() {
   pinMode(led, OUTPUT); // set the D7 LED as output
   pinMode(led2, OUTPUT); // set the D6 LED as output
-  Spark.function("control",control);    // a POST request for "blink" will reference blinkfunc, defined below
+  Spark.function("control",control);    // a POST request for "control" will reference control, defined below
 }
 
 // call the below function when the POST request matches it
