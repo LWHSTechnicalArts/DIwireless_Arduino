@@ -15,7 +15,7 @@
 char replybuffer[255];
 
 SoftwareSerial fonaSS = SoftwareSerial(FONA_TX, FONA_RX);
-Adafruit_FONA fona = Adafruit_FONA(&fonaSS, FONA_RST);
+Adafruit_FONA fona = Adafruit_FONA(FONA_RST);
 
 uint8_t readline(char *buff, uint8_t maxbuff, uint16_t timeout = 0);
 
@@ -29,16 +29,18 @@ void setup() {
   Serial.println(F("Initializing....(May take 3 seconds)"));
 
   lcd.begin(9600);  // start lcd serial
+  fonaSS.begin(9600);
 
   // See if the FONA is responding
-  if (! fona.begin(9600)) {  // make it slow so its easy to read!
+  if (! fona.begin(fonaSS)) {  // make it slow so its easy to read!
     Serial.println(F("Couldn't find FONA"));
     while (1);
   }
   Serial.println(F("FONA is OK"));
 
   // Print SIM card IMEI number.
-  char imei[15] = {0}; // MUST use a 16 character buffer for IMEI!
+  char imei[15] = {
+    0  }; // MUST use a 16 character buffer for IMEI!
   uint8_t imeiLen = fona.getIMEI(imei);
   if (imeiLen > 0) {
     Serial.print("SIM card IMEI: "); 
@@ -262,6 +264,7 @@ void invalid_message() {
   delay(2000);
   loop();
 }
+
 
 
 
