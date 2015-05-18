@@ -10,11 +10,11 @@ Adafruit_FONA fona = Adafruit_FONA(FONA_RST);
 
 void setup() {
   pinMode(7, INPUT);
-  
+
   Serial.begin(115200);
   Serial.println(F("FONA basic test"));
   Serial.println(F("Initializing....(May take 3 seconds)"));
-fonaSS.begin(4800); 
+  fonaSS.begin(4800); 
 
   // See if the FONA is responding
   if (! fona.begin(fonaSS)) {  // make it slow so its easy to read!
@@ -24,7 +24,8 @@ fonaSS.begin(4800);
   Serial.println(F("FONA is OK"));
 
   // Print SIM card IMEI number.
-  char imei[15] = {0}; // MUST use a 16 character buffer for IMEI!
+  char imei[15] = {
+    0  }; // MUST use a 16 character buffer for IMEI!
   uint8_t imeiLen = fona.getIMEI(imei);
   if (imeiLen > 0) {
     Serial.print("SIM card IMEI: "); 
@@ -42,3 +43,4 @@ void loop() {
   }
   delay(200);
 }
+
