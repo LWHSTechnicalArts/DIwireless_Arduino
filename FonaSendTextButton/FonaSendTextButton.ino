@@ -6,7 +6,7 @@
 #define FONA_RST 4
 
 SoftwareSerial fonaSS = SoftwareSerial(FONA_TX, FONA_RX);
-Adafruit_FONA fona = Adafruit_FONA(&fonaSS, FONA_RST);
+Adafruit_FONA fona = Adafruit_FONA(FONA_RST);
 
 void setup() {
   pinMode(7, INPUT);
@@ -14,10 +14,10 @@ void setup() {
   Serial.begin(115200);
   Serial.println(F("FONA basic test"));
   Serial.println(F("Initializing....(May take 3 seconds)"));
-
+fonaSS.begin(4800); 
 
   // See if the FONA is responding
-  if (! fona.begin(4800)) {  // make it slow so its easy to read!
+  if (! fona.begin(fonaSS)) {  // make it slow so its easy to read!
     Serial.println(F("Couldn't find FONA"));
     while (1);
   }
@@ -42,6 +42,3 @@ void loop() {
   }
   delay(200);
 }
-
-
-
