@@ -1,6 +1,7 @@
 //based on Adafruit FONA code, with sections from "Building Wireless Sensor Networks" by Robert Faludi.
 //Synthesized by Andrew Kleindolph 2015
 //For use with Adafruit Fona and Processing
+int inByte = 0;
 
 #include <SoftwareSerial.h>
 #include "Adafruit_FONA.h"
@@ -72,8 +73,8 @@ void loop() {
   if (! fona.readSMS(smsn, replybuffer, 250, &smslen)) { // pass in buffer and max len!
     Serial.println("Failed!");
   }
-
-  Serial.println(text);
+     Serial.write(replybuffer);
+ 
 }
 
 void flushSerial() {

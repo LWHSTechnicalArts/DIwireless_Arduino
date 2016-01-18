@@ -112,20 +112,6 @@ void loop() {
 
   lcd.print(text);
 
-  if (text.length() > 1) {
-    lcd.write(254);  // set cursor command
-    lcd.write(128);  //Row 0 position 0
-    
-    if (text.length() > 0) {
-      unsigned long displayTime = 800; //300000 = 5 minutes
-      while (millis() - startTime < displayTime) {
-        clearScreen();
-        showText(text);
-        // pause after showing the string
-        delay(700);
-      }
-    }
-  }
 }
 
 void flushSerial() {
@@ -190,58 +176,6 @@ uint8_t readline(char *buff, uint8_t maxbuff, uint16_t timeout) {
   }
   buff[buffidx] = 0;  // null term
   return buffidx;
-}
-
-//-----function below properly displays text-----
-void showText(String text) {
-  int cpos = 0; // keeps track of the current cursor position
-  int line = 0; // keeps track of the current line
- 
-  for (int i = 0; i < text.length(); i++) {   // step through the text one character at a time
-    boolean linefeed = false;     // in general, don't make a linefeed
-    if (text[i] == ' ') {    // if the current character is a space, then make a line feed
-      linefeed = true;
-      // ...but check first that there isn't another space before the edge of the screen
-      for (int j = i + 1; j < i + WIDTH - cpos + 1 && j < text.length() ; j++) {
-        if (text[j] == ' ') linefeed = false; // another space before the edge of the screen
-        else if (j == text.length() - 1) linefeed = false; // all of the text completes before the edge of the screen
-      }
-    }
-
-    // make a linefeed if we reach the edge of the screen (if a word is greater in length than the width)
-    if (cpos >= WIDTH) {
-      linefeed == true;
-    }
-
-    // on linefeeds
-    if (linefeed == true) {
-      switch (line) {
-      case 0:
-        lcd.write(254);  //set cursor command
-        lcd.write(192);  //Row 1 position 0
-        line = 1;
-        break;
-      case 1:
-        delay(500);     //delay before displaying next section
-        clearScreen();
-        lcd.write(254); //set cursor command
-        lcd.write(128); //Row 0 position 0
-        line = 0;
-        break;
-      }
-      cpos = 0; // reset the cursor tracker to the beginning of the screen
-    }
-
-    // if this isn't a line feed
-    else {
-      // print the current character, add it to the line buffer and advance the cursor position
-      lcd.print(text[i]);
-      cpos++;
-      delay(50); // wait a moment after each character
-    }
-  }
-  delay(1000);  //one second delay at end of message
-  clearScreen();
 }
 
 void clearScreen(){
