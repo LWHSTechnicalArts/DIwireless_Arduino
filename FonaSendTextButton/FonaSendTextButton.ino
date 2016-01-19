@@ -39,7 +39,7 @@ void loop() {
 
     fona.sendSMS("14150000000", "!!!!The Button is Pressed!!!!!");  //phone number and message here 140 characters max
     Serial.println("Sent!");
-    delay(5000);
+    delay(10000);
   }
   delay(200);
 }

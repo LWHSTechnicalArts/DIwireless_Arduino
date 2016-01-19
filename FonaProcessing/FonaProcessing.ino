@@ -31,7 +31,7 @@ void setup() {
     Serial.println(F("Couldn't find FONA"));
     while (1);
   }
-  //Serial.println(F("FONA is OK"));
+  Serial.println(F("FONA is OK"));
 
   // Print SIM card IMEI number.
   char imei[15] = {
@@ -73,7 +73,7 @@ void loop() {
   if (! fona.readSMS(smsn, replybuffer, 250, &smslen)) { // pass in buffer and max len!
     Serial.println("Failed!");
   }
-     Serial.write(replybuffer);
+     Serial.println(replybuffer);
  
 }
 

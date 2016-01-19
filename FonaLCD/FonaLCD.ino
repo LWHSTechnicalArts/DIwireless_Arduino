@@ -47,11 +47,7 @@ void setup() {
     Serial.print("SIM card IMEI: "); 
     Serial.println(imei);
   }
-  clearScreen();  
-  delay(100);
-  lcd.write(124);  // set brightness command
-  lcd.write(157);   // set brightness 127 - 157 (brightest)
-  delay(100);
+
   lcd.write(254);  // set cursor command
   lcd.write(128);  //Row 0 position 0
   lcd.print("text me now!!!!");
@@ -61,7 +57,6 @@ void loop() {
   unsigned long startTime = millis();
   String text = replybuffer;
   // read the number of SMS's!
-  
   int8_t smsnum = fona.getNumSMS();
   if (smsnum < 0) {
     Serial.println(F("Could not read # SMS"));
@@ -92,30 +87,41 @@ void loop() {
     Serial.println("newSMS");
   }
 
-  Serial.print(F("\n\rReading SMS #")); Serial.println(smsn);
+  Serial.print(F("\n\rReading SMS #")); 
+  Serial.println(smsn);
 
   // Retrieve SMS sender address/phone number.
-  if (! fona.getSMSSender(newSMS, replybuffer, 250)) {
+  if (! fona.getSMSSender(3, replybuffer, 250)) {
     Serial.println("Failed!");
   }
-  Serial.print(F("FROM: ")); Serial.println(replybuffer);
+  Serial.print(F("FROM: ")); 
+  Serial.println(replybuffer);
 
   // Retrieve SMS value.
   uint16_t smslen;
-  if (! fona.readSMS(newSMS, replybuffer, 250, &smslen)) { // pass in buffer and max len!
+  if (! fona.readSMS(smsn, replybuffer, 250, &smslen)) { // pass in buffer and max len!
     Serial.println("Failed!");
   }
-  Serial.print(F("***** SMS #")); Serial.print(smsn);
-  Serial.print(" ("); Serial.print(smslen); Serial.println(F(") bytes *****"));
-  Serial.println(replybuffer);
-  Serial.println(F("*****"));
+  Serial.print(F("***** SMS #")); 
+  Serial.print(smsn);
+  Serial.print(" ("); 
+  Serial.print(smslen); 
+  Serial.println(F(") bytes *****"));
 
-  lcd.print(text);
+  Serial.println(replybuffer);
+
+  //filter out for emoticons
+  if  ((replybuffer[0] == 'D') && (replybuffer[1] == '8') && (replybuffer[2] == '3') && (replybuffer[3] == 'D')) {
+    invalid_message();
+  }
+
+  if  ((replybuffer[0] == 'D') && (replybuffer[1] == '8') && (replybuffer[2] == '3') && (replybuffer[3] == 'C')) {
+    invalid_message();
+  }
 
   if (text.length() > 1) {
     lcd.write(254);  // set cursor command
     lcd.write(128);  //Row 0 position 0
-    
     if (text.length() > 0) {
       unsigned long displayTime = 800; //300000 = 5 minutes
       while (millis() - startTime < displayTime) {
@@ -196,7 +202,7 @@ uint8_t readline(char *buff, uint8_t maxbuff, uint16_t timeout) {
 void showText(String text) {
   int cpos = 0; // keeps track of the current cursor position
   int line = 0; // keeps track of the current line
- 
+
   for (int i = 0; i < text.length(); i++) {   // step through the text one character at a time
     boolean linefeed = false;     // in general, don't make a linefeed
     if (text[i] == ' ') {    // if the current character is a space, then make a line feed
@@ -247,6 +253,17 @@ void showText(String text) {
 void clearScreen(){
   lcd.write(0xFE);  // send the special command
   lcd.write(0x01);  // send the clear screen command
+}
+
+void invalid_message() {
+  lcd.write(254);  //set cursor command
+  lcd.write(128);  //Row 1 position 0
+  lcd.print("no emoticons");
+  lcd.write(254);  //set cursor command
+  lcd.write(192);  //Row 1 position 0
+  lcd.print("please!");
+  delay(2000);
+  loop();
 }
 
 
